@@ -1,76 +1,156 @@
-let playerTotalScore = 0
-let playerCurrentScore = 0
-let compTotalScore = 0
-let compCurrentScore = 0
+let scores = {
+    playerRoll: 0,
+    playerTotalScore: 0,
+    playerCurrentScore: 0,
+    compRoll: 0,
+    compTotalScore: 0,
+    compCurrentScore: 0,
+}
 
 function OnLoadRoll() {
 
-    playerCurrentScore = RollDie(true)
-    document.getElementById("initial-roll").innerText = playerCurrentScore;
-    document.getElementById("your-current-score").innerText = playerCurrentScore;
-    document.getElementById("your-total-score").innerText = playerTotalScore;
-    document.getElementById("computer-current-score").innerText = compCurrentScore;
-    document.getElementById("computer-total-score").innerText = compTotalScore;
+    scores.playerCurrentScore = RollDie(true);
+    scores.playerRoll = scores.playerCurrentScore; 
+    UpdateScores();
 
 }
 
 function PlayerTurn(){
-    RollDie()
+    const roll = RollDie();
+    if (roll == 1){
+        scores.playerCurrentScore = 0;
+        UpdateScores();
+        DisablePlayerButtons();
+        ComputerTurn();
+    } else {
+        scores.playerCurrentScore += roll;
+        UpdateScores();
+    }
 }
 
 function ComputerTurn(){
 
-    let compRoll = 0;
     let choice = Math.floor(Math.random() * 5);
-    if (choice == 0){ //if choice is a 0, then the computer decides to hold. Otherwise it rolls.
+    while (choice != 0){
+        const roll = RollDie(false, false);
+        if (roll == 1){
+            scores.compCurrentScore = 0;
+            UpdateScores();
+            EnablePlayerButtons();
+            return;
+        } else {
+            scores.compCurrentScore += roll;
+            UpdateScores();
+        }
+        choice = Math.floor(Math.random() * 5);
+    }
+
+    scores.compTotalScore += scores.compCurrentScore;
+    scores.compCurrentScore = 0;
+    UpdateScores();
+    CheckWinner();
+    EnablePlayerButtons();
+    //PlayerTurn();
+
+    /*if (choice == 0){ //if choice is a 0, then the computer decides to hold. Otherwise it rolls.
+        scores.compTotalScore += scores.compCurrentScore;
+        CheckWinner();
+        EnablePlayerButtons();
         PlayerTurn()
     } else {
-        compRoll = Math.floor(Math.random() * 6) + 1;
-        if (compRoll == 1){
-            compCurrentScore = 0;
+        scores.compRoll = Math.floor(Math.random() * 6) + 1;
+        if (scores.compRoll == 1){
+            scores.compCurrentScore = 0;
+            EnablePlayerButtons();
             PlayerTurn()
         } else {
-            compCurrentScore = compRoll;
+            scores.compCurrentScore = scores.compRoll;
         }
-        return compRoll;
-    }
+        ComputerTurn();
+    }*/
 }
 
-function RollDie(initialRoll = false){
+function RollDie(initialRoll = false, isPlayer = true) {
 
     let roll = Math.floor(Math.random() * 6) + 1
     if (initialRoll){
         return roll;
     } else {
         if (roll == 1) {
-            playerCurrentScore = 0;
-            document.getElementById("your-current-score").innerText = playerCurrentScore;
-            document.getElementById("computer-total-score").innerText = compTotalScore;
-            document.getElementById("computer-current-score").innerText = compCurrentScore;
-            document.getElementById("your-current-score").innerText = playerCurrentScore;
-            ComputerTurn()
+            if (isPlayer){
+                scores.playerCurrentScore = 0;
+                scores.playerRoll = roll;
+                UpdateScores()
+            } else {
+                scores.compCurrentScore = 0;
+                scores.compRoll = roll;
+                UpdateScores();
+            }
+            //ComputerTurn()
         } else {
-            playerCurrentScore += roll;
-            document.getElementById("your-current-score").innerText = playerCurrentScore;
-            document.getElementById("computer-total-score").innerText = compTotalScore;
-            document.getElementById("computer-current-score").innerText = compCurrentScore;
+            if (isPlayer){
+                scores.playerCurrentScore += roll;
+                scores.playerRoll = roll;
+                UpdateScores()
+            } else {
+                scores.compCurrentScore += roll;
+                scores.compRoll = roll;
+                UpdateScores();
+            }
         }
         return roll;
     }
+
 }
 
 function Hold(){
 //Adds the current turn’s points to the player’s total score and switches turns.
-    playerTotalScore += playerCurrentScore;
-    document.getElementById("your-total-score").innerText = playerTotalScore;
-    ComputerTurn()
-
+    scores.playerTotalScore += scores.playerCurrentScore;
+    scores.playerCurrentScore = 0;
+    UpdateScores()
+    CheckWinner();
+    DisablePlayerButtons();
+    ComputerTurn();
 }
 
 function CheckWinner(){
-    //Checks if a player has reached 100 points and declares the winner.
+    if(scores.playerTotalScore >= 100){
+        alert("YOU WIN!!!!!");
+        Reset();
+    } else if (scores.compTotalScore >= 100){
+        alert("Sorry, YOU LOSE!!!!!");
+        Reset();
+    }
+
 }
 
-function reset(){
-    //reset game
+function DisablePlayerButtons(){
+    document.getElementById("roll").disabled = true;
+    document.getElementById("hold").disabled = true;
+}
+
+function EnablePlayerButtons(){
+    document.getElementById("roll").disabled = false;
+    document.getElementById("hold").disabled = false;
+}
+
+function UpdateScores(){
+    document.getElementById("your-roll").innerText = scores.playerRoll;
+    document.getElementById("your-current-score").innerText = scores.playerCurrentScore;
+    document.getElementById("your-total-score").innerText = scores.playerTotalScore;
+    document.getElementById("computer-roll").innerText = scores.compRoll;
+    document.getElementById("computer-current-score").innerText = scores.compCurrentScore;
+    document.getElementById("computer-total-score").innerText = scores.compTotalScore;
+}
+
+function Reset(){
+    scores = {
+        playerTotalScore: 0,
+        playerCurrentScore: 0,
+        compTotalScore: 0,
+        compCurrentScore: 0,
+    }
+    OnLoadRoll()
+    //UpdateScores();
+    EnablePlayerButtons();
 }
