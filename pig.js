@@ -1,17 +1,39 @@
-let playerScore = 0
+let playerTotalScore = 0
 let playerCurrentScore = 0
-let compScore = 0
+let compTotalScore = 0
 let compCurrentScore = 0
+
+function OnLoadRoll() {
+
+    playerCurrentScore = RollDie(true)
+    document.getElementById("initial-roll").innerText = playerCurrentScore;
+    document.getElementById("your-current-score").innerText = playerCurrentScore;
+    document.getElementById("your-total-score").innerText = playerTotalScore;
+    document.getElementById("computer-current-score").innerText = compCurrentScore;
+    document.getElementById("computer-total-score").innerText = compTotalScore;
+
+}
 
 function PlayerTurn(){
     RollDie()
 }
 
 function ComputerTurn(){
-    // manages the computer's turn
-    //updates current score
-    //check for roll of 1
-    //implement strategy for when computer holds. Maybe based on a random number?
+
+    let compRoll = 0;
+    let choice = Math.floor(Math.random() * 5);
+    if (choice == 0){ //if choice is a 0, then the computer decides to hold. Otherwise it rolls.
+        PlayerTurn()
+    } else {
+        compRoll = Math.floor(Math.random() * 6) + 1;
+        if (compRoll == 1){
+            compCurrentScore = 0;
+            PlayerTurn()
+        } else {
+            compCurrentScore = compRoll;
+        }
+        return compRoll;
+    }
 }
 
 function RollDie(initialRoll = false){
@@ -22,30 +44,26 @@ function RollDie(initialRoll = false){
     } else {
         if (roll == 1) {
             playerCurrentScore = 0;
-            alert("You rolled a 1! Your turn is over and you've lost any points gained during this turn.")
+            document.getElementById("your-current-score").innerText = playerCurrentScore;
+            document.getElementById("computer-total-score").innerText = compTotalScore;
+            document.getElementById("computer-current-score").innerText = compCurrentScore;
+            document.getElementById("your-current-score").innerText = playerCurrentScore;
             ComputerTurn()
         } else {
             playerCurrentScore += roll;
-            alert("You rolled a " + roll + "! You current score is " + playerCurrentScore + ".")
+            document.getElementById("your-current-score").innerText = playerCurrentScore;
+            document.getElementById("computer-total-score").innerText = compTotalScore;
+            document.getElementById("computer-current-score").innerText = compCurrentScore;
         }
         return roll;
     }
-    // generate a random number 1-6
-    // if 1 is rolled, turn ends
 }
 
-function OnLoadRoll() {
-
-    playerScore = RollDie(true)
-    alert = ("Your initial roll: " + playerScore)
-
-}
-
-function PlayerHold(){
+function Hold(){
 //Adds the current turn’s points to the player’s total score and switches turns.
-}
-
-function CompHold(){
+    playerTotalScore += playerCurrentScore;
+    document.getElementById("your-total-score").innerText = playerTotalScore;
+    ComputerTurn()
 
 }
 

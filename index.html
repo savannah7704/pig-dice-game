@@ -15,9 +15,16 @@
             and add up the points. Your turn ends when you hold or if you roll a 1. If you roll a 1, you will lose any points you gained during that round. The first
             player to reach 100 points wins!
         </p>
+        <div>
+            <p>Initial roll: <span id="initial-roll"></span></p>
+            <p>Your current turn's score: <span id="your-current-score"></span></p>
+            <p>Your total score: <span id="your-total-score"></span></p>
+            <p>Computer's current score: <span id="computer-current-score"></span></p>
+            <p>Computer's total score: <span id="computer-total-score"></span></p>
+        </div>
         <script src="pig.js"></script>
         <button type="button" onclick="RollDie()">Roll die</button>
-        <button type="button" onclick="PlayerHold()">Hold</button>
+        <button type="button" onclick="Hold()">Hold</button>
         <button type="button" onclick="Reset()">Reset game</button>
 
         <!--TO DO:
