@@ -17,7 +17,7 @@ function OnLoadRoll() {
 
 function PlayerTurn(){
     const roll = RollDie();
-    if (roll == 1){
+    if (roll == 1){ //if player rolls a 1, they lose any points gained during their turn
         scores.playerCurrentScore = 0;
         UpdateScores();
         DisablePlayerButtons();
@@ -31,7 +31,7 @@ function PlayerTurn(){
 function ComputerTurn(){
 
     let choice = Math.floor(Math.random() * 5);
-    while (choice != 0){
+    while (choice != 0){ //determines whether the computer chooses to roll or hold.
         const roll = RollDie(false, false);
         if (roll == 1){
             scores.compCurrentScore = 0;
@@ -50,24 +50,6 @@ function ComputerTurn(){
     UpdateScores();
     CheckWinner();
     EnablePlayerButtons();
-    //PlayerTurn();
-
-    /*if (choice == 0){ //if choice is a 0, then the computer decides to hold. Otherwise it rolls.
-        scores.compTotalScore += scores.compCurrentScore;
-        CheckWinner();
-        EnablePlayerButtons();
-        PlayerTurn()
-    } else {
-        scores.compRoll = Math.floor(Math.random() * 6) + 1;
-        if (scores.compRoll == 1){
-            scores.compCurrentScore = 0;
-            EnablePlayerButtons();
-            PlayerTurn()
-        } else {
-            scores.compCurrentScore = scores.compRoll;
-        }
-        ComputerTurn();
-    }*/
 }
 
 function RollDie(initialRoll = false, isPlayer = true) {
@@ -86,7 +68,6 @@ function RollDie(initialRoll = false, isPlayer = true) {
                 scores.compRoll = roll;
                 UpdateScores();
             }
-            //ComputerTurn()
         } else {
             if (isPlayer){
                 scores.playerCurrentScore += roll;
@@ -145,12 +126,13 @@ function UpdateScores(){
 
 function Reset(){
     scores = {
+        playerRoll: 0,
         playerTotalScore: 0,
         playerCurrentScore: 0,
+        compRoll: 0,
         compTotalScore: 0,
         compCurrentScore: 0,
     }
-    OnLoadRoll()
-    //UpdateScores();
+    UpdateScores();
     EnablePlayerButtons();
 }

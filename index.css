@@ -18,3 +18,9 @@ button {
     margin: auto;
     margin-bottom: 10px;
 }
+
+.right-justified {
+    display: inline-block;
+    width: 10px;
+    text-align: right;
+}
