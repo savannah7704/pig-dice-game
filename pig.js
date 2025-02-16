@@ -7,52 +7,52 @@ let scores = {
     compCurrentScore: 0,
 }
 
-function OnLoadRoll() {
+function onLoadRoll() {
 
-    scores.playerCurrentScore = RollDie(true);
+    scores.playerCurrentScore = rollDie(true);
     scores.playerRoll = scores.playerCurrentScore; 
-    UpdateScores();
+    updateScores();
 
 }
 
-function PlayerTurn() {
-    const roll = RollDie();
+function playerTurn() {
+    const roll = rollDie();
     if (roll == 1){ //if player rolls a 1, they lose any points gained during their turn
         scores.playerCurrentScore = 0;
-        UpdateScores();
-        DisablePlayerButtons();
-        ComputerTurn();
+        updateScores();
+        disablePlayerButtons();
+        computerTurn();
     } else {
         scores.playerCurrentScore += roll;
-        UpdateScores();
+        updateScores();
     }
 }
 
-function ComputerTurn() {
+function computerTurn() {
 
     let choice = Math.floor(Math.random() * 5);
     while (choice != 0){ //determines whether the computer chooses to roll or hold.
-        const roll = RollDie(false, false);
+        const roll = rollDie(false, false);
         if (roll == 1){
             scores.compCurrentScore = 0;
-            UpdateScores();
-            EnablePlayerButtons();
+            updateScores();
+            enablePlayerButtons();
             return;
         } else {
             scores.compCurrentScore += roll;
-            UpdateScores();
+            updateScores();
         }
         choice = Math.floor(Math.random() * 5);
     }
 
     scores.compTotalScore += scores.compCurrentScore;
     scores.compCurrentScore = 0;
-    UpdateScores();
-    CheckWinner();
-    EnablePlayerButtons();
+    updateScores();
+    checkWinner();
+    enablePlayerButtons();
 }
 
-function RollDie(initialRoll = false, isPlayer = true) {
+function rollDie(initialRoll = false, isPlayer = true) {
 
     let roll = Math.floor(Math.random() * 6) + 1
     if (initialRoll){
@@ -62,21 +62,21 @@ function RollDie(initialRoll = false, isPlayer = true) {
             if (isPlayer){
                 scores.playerCurrentScore = 0;
                 scores.playerRoll = roll;
-                UpdateScores()
+                updateScores()
             } else {
                 scores.compCurrentScore = 0;
                 scores.compRoll = roll;
-                UpdateScores();
+                updateScores();
             }
         } else {
             if (isPlayer){
                 scores.playerCurrentScore += roll;
                 scores.playerRoll = roll;
-                UpdateScores()
+                updateScores()
             } else {
                 scores.compCurrentScore += roll;
                 scores.compRoll = roll;
-                UpdateScores();
+                updateScores();
             }
         }
         return roll;
@@ -84,38 +84,38 @@ function RollDie(initialRoll = false, isPlayer = true) {
 
 }
 
-function Hold() {
+function hold() {
 //Adds the current turn’s points to the player’s total score and switches turns.
     scores.playerTotalScore += scores.playerCurrentScore;
     scores.playerCurrentScore = 0;
-    UpdateScores()
-    CheckWinner();
-    DisablePlayerButtons();
-    ComputerTurn();
+    updateScores()
+    checkWinner();
+    disablePlayerButtons();
+    computerTurn();
 }
 
-function CheckWinner() {
+function checkWinner() {
     if(scores.playerTotalScore >= 100){
         alert("YOU WIN!!!!!");
-        Reset();
+        reset();
     } else if (scores.compTotalScore >= 100){
         alert("Sorry, YOU LOSE!!!!!");
-        Reset();
+        reset();
     }
 
 }
 
-function DisablePlayerButtons() {
+function disablePlayerButtons() {
     document.getElementById("roll").disabled = true;
     document.getElementById("hold").disabled = true;
 }
 
-function EnablePlayerButtons() {
+function enablePlayerButtons() {
     document.getElementById("roll").disabled = false;
     document.getElementById("hold").disabled = false;
 }
 
-function UpdateScores() {
+function updateScores() {
     document.getElementById("your-roll").innerText = scores.playerRoll;
     document.getElementById("your-current-score").innerText = scores.playerCurrentScore;
     document.getElementById("your-total-score").innerText = scores.playerTotalScore;
@@ -124,7 +124,7 @@ function UpdateScores() {
     document.getElementById("computer-total-score").innerText = scores.compTotalScore;
 }
 
-function Reset() { //resets the game
+function reset() { //resets the game
     scores = {
         playerRoll: 0,
         playerTotalScore: 0,
@@ -133,6 +133,6 @@ function Reset() { //resets the game
         compTotalScore: 0,
         compCurrentScore: 0,
     }
-    UpdateScores();
-    EnablePlayerButtons();
+    updateScores();
+    enablePlayerButtons();
 }
